@@ -12,6 +12,7 @@ import random, math
 
 app = Flask(__name__)
 
+
 # ==================================================
 # CLASS DEFINITION
 # ==================================================
@@ -43,6 +44,7 @@ class Room:
         self.secrets = {}
         self.monsters = []
         self.visited = False
+
 
 #==================================================
 # ROOM OBJECT CREATION
@@ -398,6 +400,9 @@ puzzle_exit = Room("Puzzle Exit", "You step into this room and find yourself in 
                                   "fail my test I will eat you. Or you can refuse and go on your way.'")
 
 
+# ==================================================
+# ROOM LISTS
+# ==================================================
 
 eligible_rooms= [sleeping_quarters, large_room, sword_room, statue_room, empty_room, wand_room, strange_room, pit_room,
                  art_room, gk_room, torture_chamber, workshop, dining_room, garden, lava_room, library, scroll_room,
@@ -414,6 +419,7 @@ exit_rooms = [key_exit, monster_exit, puzzle_exit]
 
 floating_items = ["rusty key", "lewd drawing", "guard clothes", "rusty fork", "broken manacles", "tankard",
                   "sealed letter", "moldy bread"]
+
 
 # ==================================================
 # HELPER FUNCTIONS
@@ -443,8 +449,7 @@ def choose_rooms(num_rooms: int, eligible_rooms: list) -> dict:
     num_rooms = num_rooms - len(rooms_list)
 
     # ==================================================
-    # Here I will be defining the rules and conditions
-    # for which rooms need to be included
+    # RULES FOR PLACEMENT
     # ==================================================
 
     required_items = ["sword", "food"]
@@ -461,13 +466,27 @@ def choose_rooms(num_rooms: int, eligible_rooms: list) -> dict:
 
     num_rooms = num_rooms - len(required_items)
 
-    #choose the remaining rooms at random
+    # ==================================================
+    # CHOOSE REMAINING ROOMS AT RANDOM
+    # ==================================================
     while num_rooms > 0:
         room = random.choice(rooms_remaining)
         rooms_list.append(room)
         rooms_remaining.remove(room)
         num_rooms -= 1
 
+    # ==================================================
+    # PLACE FLOATING ITEMS
+    # ==================================================
+    empty_rooms = [room for room in rooms_list if len(room.items) == 0]
+    for item in floating_items:
+        item_room = random.choice(empty_rooms)
+        item_room.items.append(item)
+        empty_rooms.remove(item_room)
+
+    # ==================================================
+    # PLACE ROOMS
+    # ==================================================
     room_coordinates = place_rooms(rooms_list)
     return room_coordinates
 
@@ -497,7 +516,9 @@ def place_rooms(rooms_list: list) -> dict:
     bottom_edge = [(x,0) for x in range(dimension)]
     edge_list = list(set(left_edge + right_edge + top_edge + bottom_edge))
 
-    # ensure that exits and some other rooms spawn on the edge of the map
+    # ==================================================
+    # ENSURE EDGE PLACEMENT
+    # ==================================================
     while len(edge_rooms) > 0:
         coordinate_choice = random.choice(edge_list)
         edge_list.remove(coordinate_choice)
