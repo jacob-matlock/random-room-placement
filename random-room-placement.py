@@ -1,16 +1,41 @@
 #Author: Jacob Matlock
+#GitHub Username: jacob-matlock
+#Description: This file serves as a room generator for my CLI game. It has one GET endpoint. That endpoint calls
+#             choose_rooms, which calls place_rooms and both return a dictionary: room_coordinates which is included
+#             in the response to the client.
 
+# ==================================================
+# IMPORTS
+# ==================================================
 from flask import Flask, jsonify
 import random, math
 
 app = Flask(__name__)
 
-#==================================================
+# ==================================================
 # CLASS DEFINITION
-#==================================================
+# ==================================================
 
 class Room:
+    """
+    This class enables the creation of a Room object that is used throughout the game.
+    """
     def __init__(self, name, description):
+        """
+        Parameters:
+            name - a string that holds the name of the object
+            description - a string that holds text that is displayed to the user when entering a room
+            exits - a dictionary that holds the exits with keys north, east, south, and west
+            items - a list of strings that represent items in the room the user can pick up
+            secrets - a dictionary that holds strings as the values that display additional information when prompted
+            monsters - a list of strings that represent monsters the user must fight in the room
+            visited - a boolean that tracks if the user has been in the room or not
+
+            coordinates - a tuple that contains the location of the room on the map
+                - defined in room creation
+            alt_description - a string that is defined for some rooms that must have a change in description for any reason
+                - example: when a monster is slain, the description of the room if the user re-enters that room afterwards
+        """
         self.name = name
         self.description = description
         self.exits = {}
@@ -20,7 +45,7 @@ class Room:
         self.visited = False
 
 #==================================================
-# ROOM CREATION
+# ROOM OBJECT CREATION
 #==================================================
 
 sleeping_quarters = Room("Sleeping Quarters", "This room has with ten beds lining both the left and "
@@ -381,8 +406,8 @@ eligible_rooms= [sleeping_quarters, large_room, sword_room, statue_room, empty_r
                  windy_room, animal_room, armory, carpet_room, stairwell, balcony, chapel, pool, fire_room, future_room,
                  game_room, fountain_room, rope_room, spikes_room, observatory]
 
-#The rooms in the following two lists are included in the room pool but are not included in the above list.
 
+#The rooms in the following two lists are included in the room pool but are not included in the above list.
 monster_rooms = [minotaur_room, manbat_room, ogre_room, mimic_room, cyclops_room, pigman_room, werewolf_room,
                  goblin_room]
 exit_rooms = [key_exit, monster_exit, puzzle_exit]
@@ -390,8 +415,9 @@ exit_rooms = [key_exit, monster_exit, puzzle_exit]
 floating_items = ["rusty key", "lewd drawing", "guard clothes", "rusty fork", "broken manacles", "tankard",
                   "sealed letter", "moldy bread"]
 
-#==================================================
-#==================================================
+# ==================================================
+# HELPER FUNCTIONS
+# ==================================================
 
 def choose_rooms(num_rooms: int, eligible_rooms: list) -> dict:
     """
