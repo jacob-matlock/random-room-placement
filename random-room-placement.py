@@ -95,9 +95,10 @@ minotaur_room.alt_description = ("You are in the room where you fought and slaye
 strange_room = Room("Strange Room", "You are in a cluttered room with lots of strange, unfamiliar "
                                 "objects. Among them, a crystal orb, preserved monster parts, piles of bones and other "
                                 "curiosities. There are a few old cabinets dotting the walls.")
-strange_room.items = ["potion"]
+strange_room.items = ["potion", "crystal orb"]
 strange_room.secrets = {0:"You search through the cabinets in the room and find a small glass bottle with a blue, "
-                          "shimmering liquid in it. The bottle is labeled 'magic in a bottle' with poor handwriting."}
+                          "shimmering liquid in it. The bottle is labeled 'magic in a bottle' with poor handwriting.",
+                        1: "You approach the glowing crystal orb and it seems to glow brighter the closer you get."}
 
 pit_room = Room("Pit Room", "You barely stop walking into this room in time to not fall into the gaping"
                             " pit that spans the majority of where the floor should be. There is a narrow ledge running"
@@ -168,9 +169,10 @@ lava_room = Room("Lava Room", "You step into this room and wilt under the oppres
 library = Room("Library", "You are in the biggest library you have ever seen. There are rows upon rows "
                           "of bookshelves, packed to the brim that run from the floor to the ceiling. In the center of "
                           "the room are some desks for studying. There are doors in the north, south, and west walls.")
-library.items = ["potion"]
+library.items = ["potion", "wooden box", "wand"]
 library.secrets = {0: "You search through the desks and find a small, glass bottle with a blue, shimmering liquid in it"
-                      ". The bottle is labeled “magic in a bottle” with poor handwriting."}
+                      ". The bottle is labeled “magic in a bottle” with poor handwriting.", 1: "You find yourself"
+                      " walking among the shelves. One one of them, a small wooden box catches your eye."}
 
 scroll_room = Room("Scroll Room", "You are in a dusty room with scroll cubbies lining the east and west"
                                   " walls. In the center of the room, there is a lectern with a scroll unrolled, and "
@@ -316,7 +318,7 @@ animal_room = Room("Animal Room", "This room is filled with the sounds and scent
 
 armory = Room("Armory","You see before you several racks of shining swords and armor, polished so that"
                        " you can see your reflection. You cringe at your ragged appearance.")
-armory.items = ["armor", "sword"]
+armory.items = ["armor", "sword", "spear"]
 
 carpet_room = Room("Carpet Room", "You find your self in a brightly colored room that has a wonderfully"
                                   "soft carpet lining the floor, walls, and ceiling.")
@@ -452,17 +454,51 @@ def choose_rooms(num_rooms: int, eligible_rooms: list) -> dict:
     # RULES FOR PLACEMENT
     # ==================================================
 
-    required_items = ["sword", "food"]
+    weapons = ["sword", "wand", "crystal orb", "spear", "knife", "laser gun"]
+    chosen_weapon = random.choice(weapons)
 
-    for item in required_items:
-        items_rooms = [room for room in rooms_remaining if item in room.items]
+    # ==================================================
+    # PHYSICAL WEAPONS DRAIN STAMINA
+    # ==================================================
+    if chosen_weapon == "sword" or chosen_weapon == "spear" or chosen_weapon == "knife":
+        weapon_rooms = [room for room in rooms_remaining if chosen_weapon in room.items]
+        room_chosen = random.choice(weapon_rooms)
 
-        if not items_rooms:
-            raise ValueError(f"No rooms available with the required item: {item}.")
+        # ==================================================
+        # FOOD REFILLS STAMINA
+        # ==================================================
+        support_rooms = [room for room in rooms_remaining if 
+                         ("food" in room.items 
+                          or "fruit" in room.items 
+                          or "vegetables" in room.items)]
+        support_room_chosen = random.choice(support_rooms)
+    # ==================================================
+    # LASER GUN DOES NOT DRAIN USER STATS
+    # HAS 6 SHOTS
+    # ==================================================
+    elif chosen_weapon == "laser gun":
+        room_chosen = future_room
+        support_room_chosen = None
 
-        room_chosen = random.choice(items_rooms)
-        rooms_list.append(room_chosen)
-        rooms_remaining.remove(room_chosen)
+    # ==================================================
+    # MAGIC WEAPONS DRAIN MAGIC
+    # ==================================================
+    else: #chosen_weapon will be wand or crystal orb
+        weapon_rooms = [room for room in rooms_remaining if chosen_weapon in room.items]
+        room_chosen = random.choice(weapon_rooms)
+
+        # ==================================================
+        # POTIONS REFILL MAGIC
+        # ==================================================
+        support_rooms = [room for room in rooms_remaining if "potion" in room.items]
+        support_room_chosen = randsom.choice(support_rooms)
+        
+
+    rooms_list.append(room_chosen)
+    rooms_remaining.remove(room_chosen)
+    if support_room_chosen is not None:
+        rooms_list.append(support_room_chosen)
+        rooms_remaining.remove(support_room_chosen)
 
     num_rooms = num_rooms - len(required_items)
 
