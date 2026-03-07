@@ -27,7 +27,7 @@ class Room:
             name - a string that holds the name of the object
             description - a string that holds text that is displayed to the user when entering a room
             exits - a dictionary that holds the exits with keys north, east, south, and west
-            items - a list of strings that represent items in the room the user can pick up
+            items - a dictionary of string keys and values that represent items in the room the user can pick up
             secrets - a dictionary that holds strings as the values that display additional information when prompted
             monsters - a list of strings that represent monsters the user must fight in the room
             visited - a boolean that tracks if the user has been in the room or not
@@ -40,7 +40,7 @@ class Room:
         self.name = name
         self.description = description
         self.exits = {}
-        self.items = []
+        self.items = {}
         self.secrets = {}
         self.monsters = []
         self.visited = False
@@ -54,16 +54,17 @@ sleeping_quarters = Room("Sleeping Quarters", "This room has with ten beds linin
                                               "right sides of the room, with a chest at the foot of each.")
 sleeping_quarters.secrets = {0: "You search through each chest and find nothing remarkable, save for some ink in one "
                                 "near the rear of the room."}
-sleeping_quarters.items = ["ink"]
+sleeping_quarters.items = {"ink": "A small, glass bottle of ink, about halfway full"}
 
 large_room = Room("Large Room", "You are in a large, empty room with beautiful paintings lining each "
                                 "of the four walls.")
 
 sword_room = Room("Sword Room", "You are in a small room with dim lighting. In the center of the room "
-                                "is a pedestal with a shiny, glinting sword placed in it. Engraved on the hilt of the "
-                                "sword is a gryphon with a snake in its talons.")
+                                "is a pedestal with a shiny, glinting sword placed in it.")
 sword_room.secrets = {0: "There some text in an unfamiliar script on the pedestal in front of the blade of the sword."}
-sword_room.items = ["sword"]
+sword_room.items = {"sword": "The sword has an elegant hilt and hand-guard, wrapped in a red-dyed leather. Engraved on "
+                             "the pommel of the sword is a gryphon with a snake in its talons. The blade shines, "
+                             "reflecting the torch light from behind you."}
 sword_room.alt_description = ("You are a small room with dim lighting. In the center of the room is the pedestal from "
                               "which you took your sword in exchange for your ring.")
 
@@ -77,9 +78,8 @@ empty_room = Room("Empty Room", "You are in a small room with torches lining the
 
 wand_room = Room("Wand Room", "You are in a small room with a pedestal in the center. Carved on the "
                               "pedestal are strange, curving runes. Placed on top of the pedestal is a thin wooden rod "
-                              "with similar runes engraved in it. Upon further inspection, you see a small diamond "
-                              "embedded in the tip of the wand.")
-wand_room.items = ["wand"]
+                              "with similar runes engraved in it.")
+wand_room.items = {"wand": "Upon further inspection, you see a small diamond embedded in the tip of the wand."}
 wand_room.alt_description = ("You are in the small room from which you took your wand. You look at the familiar runes "
                              "on the pedestal and ponder their meaning.")
 
@@ -87,10 +87,10 @@ minotaur_room = Room("Minotaur Room", "Upon entering this room, you are blasted 
                                 " It is so overpowering that you almost leave the room but you notice a menacing "
                                 "Minotaur with matted, midnight black fur across the room. It glares at you, snorting "
                                 "and stamping its feet, seemingly preparing to charge.")
-minotaur_room.items = ["minotaur horn"]
+minotaur_room.items = {"minotaur horn": "The minotaur's horns point into the air, threateningly sharp."}
 minotaur_room.monsters = ["Minotaur"]
 minotaur_room.alt_description = ("You are in the room where you fought and slayed the Minotaur. Its body remains where "
-                                 "you left it, missing a horn.")
+                                 "you left it.")
 
 strange_room = Room("Strange Room", "You are in a cluttered room with lots of strange, unfamiliar "
                                 "objects. Among them, a crystal orb, preserved monster parts, piles of bones and other "
@@ -110,9 +110,8 @@ art_room = Room("Art Room", "You are in awe of the beauty in this room. Scattere
                             "left without its landscape, a statue of a man fighting an invisible enemy, with his legs "
                             "forever entombed in stone, and many other pieces, abandoned by their creator.")
 
-gk_room = Room("Golden Key Room", "Suspended by a rope in the middle of this room is a golden key with "
-                                  "wings on its bow.")
-gk_room.items = ["Golden Key"]
+gk_room = Room("Golden Key Room", "Suspended by a rope in the middle of this room is a golden key.")
+gk_room.items = {"golden key": "The key has wings on its bow with a diamond embedded in the center."}
 gk_room.alt_description = ("You are in the room where you retrieved the golden key. The rope still dangles from the "
                            "ceiling in the center of the room.")
 
@@ -122,7 +121,7 @@ torture_chamber = Room("Torture Chamber", "This room is full of medieval torture
 manbat_room = Room("Man-Bat Room", "At first glance, this room seemed empty, but as you look around, "
                                    "you hear a slight squeaking coming from above you. You look up and see a man-bat "
                                    "hybrid hanging from the ceiling. It appears to be smelling the air between you.")
-manbat_room.items = ["man-bat wing"]
+manbat_room.items = {"man-bat wing": "The man-bats wings drape loosely over the monster's corpse."}
 manbat_room.monsters = ["Man-Bat"]
 manbat_room.alt_description = ("Now that this room is safe from any monsters, you notice the thin layer of guano lining"
                                " the floor and scratches all over the walls and ceiling.")
@@ -135,9 +134,10 @@ workshop = Room("Workshop", "This room is filled with machines belonging to mast
 dining_room = Room("Dining Room", "You are in a long dining room with a table spanning almost the "
                                   "length of the whole room. There are chairs at each head and at even intervals down "
                                   "each side. While the places at the table are set, ready for a meal, there is no food"
-                                  " in the room, save for some fresh fruit in bowls lining the center of the table. "
+                                  " in the room, save for some fresh fruit in bowls on. "
                                   "There is a single door in the west wall.")
-dining_room.items = ["fruit"]
+dining_room.items = {"fruit": "Bright colored oranges, apples, mangoes, and many other fruits are piled in bowls lining"
+                              " the table."}
 dining_room.secrets = {0: "You run your fingers along the trim that lines the walls and you feel something catch. When "
                           "you go back to see what it was, you find that there is a small button embedded in the wood "
                           "of the trim."}
@@ -155,7 +155,9 @@ garden.items = ["fruit", "vegetables"]
 ogre_room = Room("Ogre Room", "You step into this room and are greeted by a thunderous roar. Across the"
                               " room you see a massive ogre heft a giant club onto his shoulder. Drool drips onto the "
                               "floor from his under-bitten jaw as he takes a step towards you, menacingly.")
-ogre_room.items = ["ogre tooth", "ogre club"]
+ogre_room.items = {"ogre tooth": "The ogre's stained teeth jut out from its putrid mouth.", "ogre club": "The ogre's"
+                              " menacing club is laying on the floor where the ogre dropped it upon its death. It would"
+                              " be a terrifying weapon, provided you have the strength to wield it."}
 ogre_room.monsters = ["Ogre"]
 
 ogre_room.alt_description = ("The floor and walls in this room are littered with craters from where the ogre tried "
@@ -169,23 +171,24 @@ lava_room = Room("Lava Room", "You step into this room and wilt under the oppres
 library = Room("Library", "You are in the biggest library you have ever seen. There are rows upon rows "
                           "of bookshelves, packed to the brim that run from the floor to the ceiling. In the center of "
                           "the room are some desks for studying. There are doors in the north, south, and west walls.")
-library.items = ["potion", "wooden box", "wand"]
-library.secrets = {0: "You search through the desks and find a small, glass bottle with a blue, shimmering liquid in it"
-                      ". The bottle is labeled “magic in a bottle” with poor handwriting.", 1: "You find yourself"
-                      " walking among the shelves. One one of them, a small wooden box catches your eye."}
+library.items = {"potion": "You search through the desks and find a small, glass bottle with a blue, shimmering liquid "
+                           "in it. The bottle is labeled “magic in a bottle” with poor handwriting.", "wooden box":
+                           "You find yourself walking among the shelves. On one of them, a small wooden box catches "
+                           "your eye.", "wand": "Nestled in the wooden box is an elegant wand carved from a dark wood,"
+                           " with a bright emerald embedded in the tip."}
 
 scroll_room = Room("Scroll Room", "You are in a dusty room with scroll cubbies lining the east and west"
                                   " walls. In the center of the room, there is a lectern with a scroll unrolled, and "
-                                  "held open with paperweights. There are doors on the north and south walls.")
-scroll_room.items = ["scroll of blasting"]
+                                  "held open with paperweights.")
+scroll_room.items = {"scroll of blasting": "At the top of the scroll are the words 'Scroll of Blasting' in a text you "
+                                  "can read, but the rest of the page is covered in unfamiliar runes."}
 scroll_room.alt_description = ("You are in a dusty room with scroll cubbies lining the east and west walls. In the "
-                            "center of the room, there is the lectern from which you tool the scroll. There are doors"
-                            " on the north and south walls.")
+                                  "center of the room, there is the lectern from which you tool the scroll.")
 
 mimic_room = Room("Mimic Room", "You are in a simple, plain room with no ornamentation and no furniture"
                                 " other than a singular table, chair, and chest. There are doors on the east and south "
                                 "walls.")
-mimic_room.items = ["mimic tongue"]
+mimic_room.items = {"mimic tongue": "The mimics tongue lays on the floor, having fallen out of its mouth as it died."}
 mimic_room.secrets = {0: "As you approach the chest, you notice that something about it looks…wrong. You reach out your"
                          " hand only to jerk it back as the chest lunges forward, almost biting your hand off. It "
                          "appears that the chest was really a mimic. The mimic seems to be squatting, as if to prepare "
@@ -202,7 +205,7 @@ cyclops_room = Room("Cyclops Room", "You can see the wavering light of torches o
                                     "room but you can't seem to see them. Before too long, you realize that is because "
                                     "you are in the shadow of a huge cyclops. You have to tilt your head back in order "
                                     "to see its singular eye staring right at you with malice.")
-cyclops_room.items = ["cyclops eye"]
+cyclops_room.items = {"cyclops eye": "The cyclops's red irised eye still stares at you even in death."}
 cyclops_room.monsters = ["Cyclops"]
 cyclops_room.alt_description = ("The cyclops's corpse covers almost the entire floor in this room and you have to climb"
                                 " over it to navigate between the doors on the north and south walls.")
@@ -213,7 +216,8 @@ collapsed_room = Room("Collapsed Room", "The roof in the center of this room has
 
 kitchen = Room("Kitchen", "You find yourself in a clean, bright kitchen that looks like it is ready for"
                           " use by a master chef. You see doors in the south and west walls.")
-kitchen.items = ["knife", "food"]
+kitchen.items = {"knife": "There is a large knife that seems to be made of quality steel.", "cheese": "You see some "
+                          "wheels of cheese stacked in the corner"}
 kitchen.secrets = {0: "You search through each cabinet in the entire kitchen, and in one of the final drawers you "
                       "search, you find a small button hidden underneath the counter."}
 kitchen.alt_description = ("You find yourself in a clean, bright kitchen that looks like it is ready for use by a "
@@ -227,7 +231,8 @@ pigman_room = Room("Pigman Room", "You smell a sweet scent upon entering this ro
                     "person sitting at a hearth on the northern wall. You begin to walk towards them but they let out "
                     "an inhuman shrieking sound before you can get too close. It whips around and you find yourself "
                     "facing a pigman, a monster you've only heard stories of.")
-pigman_room.items = ["pigman snout"]
+pigman_room.items = {"pigman snout": "The pigman's snout was somehow removed during the fight and you accidentally step"
+                    " on it while you are walking around in this room."}
 pigman_room.monsters = ["Pigman"]
 pigman_room.alt_description = ("You shudder as you re-enter this room, remembering the traumatic fight you had with the"
                                " terrifying pigman. You make yourself leave though one of the doors on the north or "
@@ -242,7 +247,7 @@ broom_closet.alt_description = ["You are in a dusty broom closet with miscellane
                                 "There is a door on the west wall and the secret passage you opened on the east wall."]
 
 lavatory = Room("Lavatory", "You are in a small stone room with a foul stench. In one corner is a "
-                            "pitiful toilet with flies buzzing around it. You see one exit on the west wall")
+                            "pitiful toilet with flies buzzing around it.")
 
 music_room = Room("Music Room", "You are in a round room with stairs leading down to a center stage. "
                                 "Sitting on the stage, bathed in a mysterious light are many instruments, including a"
@@ -470,7 +475,8 @@ def choose_rooms(num_rooms: int, eligible_rooms: list) -> dict:
         support_rooms = [room for room in rooms_remaining if 
                          ("food" in room.items 
                           or "fruit" in room.items 
-                          or "vegetables" in room.items)]
+                          or "vegetables" in room.items
+                          or "cheese" in room.items)]
         support_room_chosen = random.choice(support_rooms)
     # ==================================================
     # LASER GUN DOES NOT DRAIN USER STATS
